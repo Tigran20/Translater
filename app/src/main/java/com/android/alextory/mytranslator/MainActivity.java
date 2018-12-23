@@ -17,6 +17,7 @@ import com.android.alextory.mytranslator.model.Languages;
 import com.android.alextory.mytranslator.model.Translation;
 import com.android.alextory.mytranslator.model.Word;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -129,7 +130,10 @@ public class MainActivity extends AppCompatActivity {
         App.getApi().getTranslate(KEY, text, langCode(language1) + "-" + langCode(language2)).enqueue(new Callback<Translation>() {
             @Override
             public void onResponse(Call<Translation> call, Response<Translation> response) {
-                wordTransl = response.body().getText().get(0);
+                if(response.body() != null) {
+                    wordTransl = response.body().getText().get(0);
+                }
+
             }
 
             @Override
