@@ -17,12 +17,12 @@ import com.android.alextory.mytranslator.model.Languages;
 import com.android.alextory.mytranslator.model.Translation;
 import com.android.alextory.mytranslator.model.Word;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     snackBar(view, "Слово: \"" + wordOriginal + "\" было добавлено");
 
-                    Word word = new Word(wordEt.getText().toString(), wordTransl);
+                    Word word = new Word(wordOriginal, wordTransl);
                     App.getDatabase().wordDao().insert(word);
                     adapter.setData(App.getDatabase().wordDao().getAll());
                 }
@@ -127,20 +127,30 @@ public class MainActivity extends AppCompatActivity {
         String language1 = String.valueOf(spinner1.getSelectedItem());
         String language2 = String.valueOf(spinner2.getSelectedItem());
 
-        App.getApi().getTranslate(KEY, text, langCode(language1) + "-" + langCode(language2)).enqueue(new Callback<Translation>() {
-            @Override
-            public void onResponse(Call<Translation> call, Response<Translation> response) {
-                if(response.body() != null) {
-                    wordTransl = response.body().getText().get(0);
-                }
+        App.getApi().getTranslate(KEY, text, langCode(language1) + "-" + langCode(language2))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Translation>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            }
+                    }
 
-            @Override
-            public void onFailure(Call<Translation> call, Throwable t) {
+                    @Override
+                    public void onNext(Translation translation) {
+                        wordTransl = translation.getText().get(0);
+                    }
 
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
 }
