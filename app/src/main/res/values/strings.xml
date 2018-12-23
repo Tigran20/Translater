@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyTranslator</string>
+    <string name="enter_word">Введите слово</string>
+
+    <string-array name="langs_array">
+        <item>Russian</item>
+        <item>English</item>
+        <item>German</item>
+    </string-array>
+</resources>
