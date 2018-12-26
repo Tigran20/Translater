@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.android.alextory.mytranslator.adapter.TranslateAdapter;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinner1;
     private Spinner spinner2;
 
+    private ImageButton changeLanguages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         spinner1 = findViewById(R.id.languages1);
         spinner2 = findViewById(R.id.languages2);
 
+        changeLanguages = findViewById(R.id.change_languages);
+
+        changeLang();
         setSpinners();
     }
 
@@ -147,5 +153,20 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void changeLang() {
+        changeLanguages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int sourceLng = spinner1.getSelectedItemPosition();
+                int targetLng = spinner2.getSelectedItemPosition();
+
+                spinner1.setSelection(targetLng);
+                spinner2.setSelection(sourceLng);
+
+                translate(wordEt.getText().toString().trim());
+            }
+        });
     }
 }
