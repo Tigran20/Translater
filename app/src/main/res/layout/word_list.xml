@@ -39,6 +39,9 @@
     </LinearLayout>
 
     <EditText
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+
         android:id="@+id/word_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
