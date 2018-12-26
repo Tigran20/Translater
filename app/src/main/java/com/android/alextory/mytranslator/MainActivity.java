@@ -19,10 +19,10 @@ import com.android.alextory.mytranslator.model.Word;
 
 import java.util.Locale;
 
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,21 +67,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fab() {
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wordOriginal = wordEt.getText().toString();
-                translate(wordOriginal);
+        fab.setOnClickListener(view -> {
+            wordOriginal = wordEt.getText().toString();
+            translate(wordOriginal);
 
-                if (wordOriginal.equals("")) {
-                    snackBar(view, "Введите слово!");
-                } else {
-                    snackBar(view, "Слово: \"" + wordOriginal + "\" было добавлено");
+            if (wordOriginal.equals("")) {
+                snackBar(view, "Введите слово!");
+            } else {
+                snackBar(view, "Слово: \"" + wordOriginal + "\" было добавлено");
 
-                    Word word = new Word(wordOriginal, wordTransl);
-                    App.getDatabase().wordDao().insert(word);
-                    adapter.setData(App.getDatabase().wordDao().getAll());
-                }
+                Word word = new Word(wordOriginal, wordTransl);
+                App.getDatabase().wordDao().insert(word);
+                adapter.setData(App.getDatabase().wordDao().getAll());
             }
         });
     }
@@ -127,15 +124,14 @@ public class MainActivity extends AppCompatActivity {
         String language1 = String.valueOf(spinner1.getSelectedItem());
         String language2 = String.valueOf(spinner2.getSelectedItem());
 
-        App.getApi().getTranslate(KEY, text, langCode(language1) + "-" + langCode(language2))
+        getData(text, language1, language2);
+    }
+
+    private void getData(String text, String lang1, String lang2) {
+        App.getApi().getTranslate(KEY, text, langCode(lang1) + "-" + langCode(lang2))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Translation>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                .subscribe(new DisposableObserver<Translation>() {
                     @Override
                     public void onNext(Translation translation) {
                         wordTransl = translation.getText().get(0);
@@ -152,5 +148,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

@@ -55,7 +55,7 @@ public class TranslateAdapter extends RecyclerView.Adapter<TranslateAdapter.View
 
     public void setData(List<Word> newData) {
         dictionaryList.clear();
-        dictionaryList = newData;
+        dictionaryList.addAll(newData);
         notifyDataSetChanged();
     }
 }
