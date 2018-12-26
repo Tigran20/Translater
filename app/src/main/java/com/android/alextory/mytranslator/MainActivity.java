@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.alextory.mytranslator.adapter.TranslateAdapter;
 import com.android.alextory.mytranslator.api.App;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TranslateAdapter adapter;
     private FloatingActionButton fab;
+    private FloatingActionButton del;
     private EditText wordEt;
 
     private String wordOriginal;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         recyclerView = findViewById(R.id.recycler_view);
         fab = findViewById(R.id.fab);
+        del = findViewById(R.id.fab_del);
         wordEt = findViewById(R.id.word_et);
 
         spinner1 = findViewById(R.id.languages1);
@@ -86,6 +89,12 @@ public class MainActivity extends AppCompatActivity {
                 App.getDatabase().wordDao().insert(word);
                 adapter.setData(App.getDatabase().wordDao().getAll());
             }
+        });
+
+        del.setOnClickListener(v -> {
+            App.getDatabase().wordDao().deleteAll();
+            adapter.setData(App.getDatabase().wordDao().getAll());
+            snackBar(v, "База данных удалена!");
         });
     }
 
@@ -141,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Translation translation) {
                         wordTransl = translation.getText().get(0);
+                        Toast.makeText(MainActivity.this, "Приветики", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -153,20 +163,18 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+
     }
 
     private void changeLang() {
-        changeLanguages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int sourceLng = spinner1.getSelectedItemPosition();
-                int targetLng = spinner2.getSelectedItemPosition();
+        changeLanguages.setOnClickListener(v -> {
+            int sourceLng = spinner1.getSelectedItemPosition();
+            int targetLng = spinner2.getSelectedItemPosition();
 
-                spinner1.setSelection(targetLng);
-                spinner2.setSelection(sourceLng);
+            spinner1.setSelection(targetLng);
+            spinner2.setSelection(sourceLng);
 
-                translate(wordEt.getText().toString().trim());
-            }
+            translate(wordEt.getText().toString().trim());
         });
     }
 }
