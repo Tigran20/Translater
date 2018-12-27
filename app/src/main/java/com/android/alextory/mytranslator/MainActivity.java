@@ -83,11 +83,14 @@ public class MainActivity extends AppCompatActivity {
             if (wordOriginal.equals("")) {
                 snackBar(view, "Введите слово!");
             } else {
-                snackBar(view, "Слово: \"" + wordOriginal + "\" было добавлено");
-
-                Word word = new Word(wordOriginal, wordTransl);
-                App.getDatabase().wordDao().insert(word);
-                adapter.setData(App.getDatabase().wordDao().getAll());
+                if (wordTransl != null) {
+                    Word word = new Word(wordOriginal, wordTransl);
+                    App.getDatabase().wordDao().insert(word);
+                    adapter.setData(App.getDatabase().wordDao().getAll());
+                    snackBar(view, "Слово: \"" + wordOriginal + "\" было добавлено");
+                } else {
+                    Toast.makeText(this, "Данные не пришли", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -150,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Translation translation) {
                         wordTransl = translation.getText().get(0);
-                        Toast.makeText(MainActivity.this, "Приветики", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
