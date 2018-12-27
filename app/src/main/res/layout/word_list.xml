@@ -39,19 +39,19 @@
     </LinearLayout>
 
     <EditText
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-
         android:id="@+id/word_et"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/enter_word"
         android:padding="18dp"
         android:textAlignment="center"
         android:textColor="@android:color/black" />
 
-    <FrameLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -81,6 +81,6 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
             android:src="@drawable/ic_add_black_24dp" />
-    </FrameLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>
