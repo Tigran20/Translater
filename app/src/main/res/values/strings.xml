@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MyTranslator</string>
     <string name="enter_word">Введите слово</string>
+    <string name="clear_dict">Вы действительно хотите очистить словарь?</string>
 
     <string-array name="langs_array">
         <item>Russian</item>

@@ -3,6 +3,7 @@ package com.android.alextory.mytranslator;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,10 +95,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        del.setOnClickListener(v -> {
-            App.getDatabase().wordDao().deleteAll();
-            adapter.setData(App.getDatabase().wordDao().getAll());
-            snackBar(v, "База данных удалена!");
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert();
+            }
         });
     }
 
@@ -178,5 +180,20 @@ public class MainActivity extends AppCompatActivity {
 
             translate(wordEt.getText().toString().trim());
         });
+    }
+
+    private void alert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Удаление бд");
+        builder.setMessage(R.string.clear_dict);
+        builder.setPositiveButton("Да", (dialog, id) -> {
+            App.getDatabase().wordDao().deleteAll();
+            adapter.setData(App.getDatabase().wordDao().getAll());
+            MainActivity.this.snackBar(findViewById(android.R.id.content), "База данных удалена!");
+        });
+        builder.setNegativeButton("Нет", (dialog, id) -> {
+        });
+        builder.show();
     }
 }
